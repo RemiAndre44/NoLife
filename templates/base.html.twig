@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <title>{% block title %}Santi{% endblock %}</title>
+        <link rel="icon" type="favicon.png" href="assets/favicon.png" />
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <link rel="stylesheet" href="assets/css/main.css" />
+        {% endblock %}
+    </head>
+    <body>
+        {% block bodyclass %}
+            <body class="is-preload">
+        {% endblock %}
+
+        <!-- Wrapper -->
+            <div id="wrapper">
+                {% block header %}
+                    <header id="header">
+                        <h1><a href="/">No Life</a></h1>
+                        <nav class="links">
+                            <ul>
+                                <li><a href="#">Programmation</a></li>
+                                <li><a href="#">Musique</a></li>
+                                <li><a href="#">Jeux-video</a></li>
+                                <li><a href="#">BD</a></li>
+                                <li><a href="#">Cinéma</a></li>
+                            </ul>
+                        </nav>
+                        <nav class="main">
+                            <ul>
+                                <li class="search">
+                                    <a class="fa-search" href="#search">Recherche</a>
+                                    <form id="search" method="get" action="#">
+                                        <input type="text" name="query" placeholder="Recherche" />
+                                    </form>
+                                </li>
+                                <li class="menu">
+                                    <a class="fa-bars" href="#menu">Menu</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </header>
+                {% endblock %}
+
+                {% block menu %}
+                    <section id="menu">
+
+                        <!-- Search -->
+                        <!--<section>
+                            <form class="search" method="get" action="#">
+                                <input type="text" name="query" placeholder="Recherche" />
+                            </form>
+                        </section>-->
+
+                        <!-- Links -->
+                        <section>
+                            <ul class="links">
+                                {% if(app.user) and (app.user.profil == 1) %}
+                                    <li>
+                                        <a href="/admin"><h3>Administration</h3></a>
+                                    </li>
+                                {% endif %} 
+                                    <li><a href="#">Programmation</a></li>
+                                    <li><a href="#">Musique</a></li>
+                                    <li><a href="#">Jeux-video</a></li>
+                                    <li><a href="#">BD</a></li>
+                                    <li><a href="#">Cinéma</a></li>
+                            </ul>
+                        </section>
+                        <!-- Actions -->
+                        {% if(app.user) %}
+                            <section>
+                                <ul class="actions stacked">
+                                    <li><a href="/logout" class="button large fit">Logout</a></li>
+                                </ul>
+                            </section>
+                        {% else %}
+                            <section>
+                                <ul class="actions stacked">
+                                    <li><a href="/login" class="button large fit">Log In</a></li>
+                                    <li><a href="/inscription" class="button large fit">Inscription</a></li>
+                                </ul>
+                            </section>
+                        {% endif %}
+
+                    </section>
+                {% endblock %}
+
+                {% block main %}
+
+                {% endblock %}
+
+                {% block about %}
+                    <section class="blurb">
+                        <h2>A propos</h2>
+                        <p align="justify">Je m'appelle Rémi et je suis ... développeur Web &#x1F61C;. Je souhaite vous proposer à travers ce blog, de partager avec vous toute l'actu qui retient mon attention. Le but étant d'ouvrir des discussions et d'échanger des points de vues sur ces sujets. Passionné de pop culture depuis toujours, on ne peut nier sa progression exponentielle dans notre société depuis maintenant quelques années pour le meilleur comme pour le pire. Longtemps catalogué marginale et même snobbé au point de s'en moquer, notre culture s'est assise à la place de ses détracteurs pour aujourd'hui recevoir les louanges de ceux la mêmes qui la dénigraient. Elle est l'industrie culturelle qui génère le plus d'argent alors de fait...tous s'en soucient. Nous parlerons ici entre passionnés dont le seul jugement est celui des sentiments de chacun.</p>
+                        <ul class="actions">
+                            <li><a href="#" class="button">Learn More</a></li>
+                        </ul>
+                    </section>
+                {% endblock %}
+
+                {% block footer %}
+                    <section id="footer">
+                        <ul class="icons">
+                            <li><a href="https://www.facebook.com/profile.php?id=100017002060717" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+                            <li><a href="https://piknu.com/u/santiku3h" class="icon brands fa-instagram" target="_blank"><span class="label" >Instagram</span></a></li>
+                            <li><a href="https://github.com/RemiAndre44" class="icon brands fa-github" target="_blank"><span class="label">RSS</span></a></li>
+                            <li><a href="mailto:remi44andre@gmail.com" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+                        </ul>
+                        <p class="copyright">&copy; SantiKu2h Design: <a href="http://html5up.net">HTML5 UP</a>.</p>
+                    </section>
+                {% endblock %}
+            </section>
+        </div>
+        {% block javascripts %}
+            <script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/browser.min.js"></script>
+            <script src="assets/js/breakpoints.min.js"></script>
+            <script src="assets/js/util.js"></script>
+            <script src="assets/js/main.js"></script>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<section id="sidebar">
+    {% block intro %}
+        <section id="intro">
+            <a href="#" class="logo">
+                {% if(app.user) %}
+                    <img src="images/upload/{{ app.user.image }}" alt="" />
+                {% else %}
+                    <img src="images/bojack.jpg" alt="" />
+                {% endif %}
+            </a>
+            <header>
+                <h2>"Du calme c'est un briquet !"</h2>
+                <p>Bojack Horseman - série Netflix -</a></p>
+            </header>
+        </section>
+    {% endblock %}
+    <section>
+        <div class="mini-posts">
+            {% include('home/mini_post.html.twig') %}
+            {% include('home/mini_post.html.twig') %}
+            {% include('home/mini_post.html.twig') %}
+            {% include('home/mini_post.html.twig') %}
+        </div>
+    </section>
+    <section>
+        <ul class="posts">
+            {% include('home/posts.html.twig') %}
+            {% include('home/posts.html.twig') %}
+            {% include('home/posts.html.twig') %}
+            {% include('home/posts.html.twig') %}
+            {% include('home/posts.html.twig') %}
+        </ul>
+    </section>

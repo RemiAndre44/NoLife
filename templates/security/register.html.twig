@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block bodyclass %}
+    <body class="single is-preload">
+{% endblock %}
+
+        {% block main %}
+            <div id="main">
+
+                <!-- Login -->
+                <article class="post">
+                    <header>
+                        <div class="title">
+                            <h1 style="text-align: center;">Inscription</h1>
+                        </div>
+                    </header>
+
+                    <body>
+                        <div class="row">
+                            <div class="col-3">
+                                
+                            </div>
+                            <div class="col-6" >
+                                {{ form_start(form) }}
+
+                                
+                                {{ form_label(form.surname, 'Pseudo') }}
+                                {{ form_widget(form.surname) }}
+                                {{ form_label(form.email, 'Email') }}
+                                {{ form_widget(form.email) }}
+                                {{ form_label(form.password, 'Mot de passe') }}
+                                {{ form_widget(form.password) }}
+                                {{ form_label(form.confirm_password, 'Confirmez votre mot de passe') }}
+                                {{ form_widget(form.confirm_password) }}
+                                {{ form_label(form.image, 'Photo d\'avatar') }}
+                                {{ form_widget(form.image) }}
+
+                                <div class="form-group" style="text-align: center; margin-top: 10vh">
+                                    <button type="submit" >Inscription</button>
+                                </div>
+
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </body>
+                </article>
+
+        {% endblock %}
+
+{% block about %}{% endblock %}

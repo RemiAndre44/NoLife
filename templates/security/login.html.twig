@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block bodyclass %}
+    <body class="single is-preload">
+{% endblock %}
+
+        {% block main %}
+            <div id="main">
+
+                <!-- Login -->
+                <article class="post">
+                    <header>
+                        <div class="title">
+                            <h2 style="text-align:center">Login</h2>
+                        </div>
+                        
+                    </header>
+                    <body>
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6" >
+                                <div class="loginForm">
+                                    <form  action="{{ path('login') }}" method="post">
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Adresse mail" required name="_username" class="form-control" >
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" placeholder="Mot de passe" required name="_password" class="form-control">
+                                        </div>
+                                        <div class="form-group" style="text-align:center">
+                                            <button type="submit" >Connexion</button>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <a href="/initPassword">Mot de passe oublié</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </body>
+                </article>
+
+            </div> 
+        {% endblock %}
+
+{% block about %}{% endblock %}

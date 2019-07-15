@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+   <div id="main">
+
+        {% include('/home/article.html.twig') %}
+        
+        {% include('/home/article.html.twig') %}
+        
+        {% include('/home/article.html.twig') %}
+
+        <ul class="actions pagination">
+            <li><a href="" class="disabled button large previous">Previous Page</a></li>
+            <li><a href="#" class="button large next">Next Page</a></li>
+        </ul>
+
+    </div>
+        
+    {% include('/home/sidebar.html.twig') %}
+
+{% endblock %}
