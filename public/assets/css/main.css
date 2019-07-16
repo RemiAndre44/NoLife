@@ -3619,3 +3619,6 @@ input, select, textarea {
 		.loginForm div{
 			text-align:center;
 		}
+		#menu .links > li{
+			text-align:center;
+		}

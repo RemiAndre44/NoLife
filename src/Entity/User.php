@@ -255,4 +255,8 @@ class User implements UserInterface
         return $this->request;
     }
 
+    public function __toString(){
+        return $this->surname;
+    }
+
 }

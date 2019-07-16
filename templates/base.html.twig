@@ -22,11 +22,10 @@
                         <h1><a href="/">No Life</a></h1>
                         <nav class="links">
                             <ul>
-                                <li><a href="#">Programmation</a></li>
-                                <li><a href="#">Musique</a></li>
-                                <li><a href="#">Jeux-video</a></li>
-                                <li><a href="#">BD</a></li>
-                                <li><a href="#">Cinéma</a></li>
+                                {% for categorie in categories %}
+                                <li><a href="{{ path('article', {'id': categorie.id}) }}">{{ categorie.title }}</a></li>
+                                
+                                {% endfor %}
                             </ul>
                         </nav>
                         <nav class="main">

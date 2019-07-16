@@ -29,18 +29,22 @@ easy_admin:
                 title: 'Article'
                 fields:
                     - id
+                    - title
                     - content
                     - author
                     - category
+                    - date
                     - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
             show:
                 fields:
                     - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
             form:
                 fields:
+                    - title
                     - content
                     - author
                     - category
+                    - date
                     - { property: 'imageFile', type: 'vich_file' }
             class: App\Entity\Article
         Comment:

@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Repository\CategoryRepository;
 use App\Form\RegisterFormType;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -18,9 +19,13 @@ class SecurityController extends AbstractController
      * @Route("/login", name="login")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function login()
+    public function login(CategoryRepository $catRepo)
     {
-        return $this->render('security/login.html.twig');
+        $categories = $catRepo->selectCategories();
+
+        return $this->render('security/login.html.twig',[
+            'categories' => $categories
+        ]);
     }
 
     /**
