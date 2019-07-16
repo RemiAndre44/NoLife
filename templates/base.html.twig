@@ -24,7 +24,6 @@
                             <ul>
                                 {% for categorie in categories %}
                                 <li><a href="{{ path('article', {'id': categorie.id}) }}">{{ categorie.title }}</a></li>
-                                
                                 {% endfor %}
                             </ul>
                         </nav>
@@ -47,13 +46,6 @@
                 {% block menu %}
                     <section id="menu">
 
-                        <!-- Search -->
-                        <!--<section>
-                            <form class="search" method="get" action="#">
-                                <input type="text" name="query" placeholder="Recherche" />
-                            </form>
-                        </section>-->
-
                         <!-- Links -->
                         <section>
                             <ul class="links">
@@ -62,11 +54,9 @@
                                         <a href="/admin"><h3>Administration</h3></a>
                                     </li>
                                 {% endif %} 
-                                    <li><a href="#">Programmation</a></li>
-                                    <li><a href="#">Musique</a></li>
-                                    <li><a href="#">Jeux-video</a></li>
-                                    <li><a href="#">BD</a></li>
-                                    <li><a href="#">Cinéma</a></li>
+                                {% for categorie in categories %}
+                                    <li><a href="{{ path('article', {'id': categorie.id}) }}">{{ categorie.title }}</a></li>
+                                {% endfor %}
                             </ul>
                         </section>
                         <!-- Actions -->

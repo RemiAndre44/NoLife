@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use App\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -71,9 +72,25 @@ class Article
      */
     private $title;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $sub_title;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $resume;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PostLike", mappedBy="article")
+     */
+    private $postLikes;
+
     public function __construct()
     {
         $this->list_comments = new ArrayCollection();
+        $this->postLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +215,70 @@ class Article
         $this->title = $title;
 
         return $this;
+    }
+
+    public function getSubTitle(): ?string
+    {
+        return $this->sub_title;
+    }
+
+    public function setSubTitle(string $sub_title): self
+    {
+        $this->sub_title = $sub_title;
+
+        return $this;
+    }
+
+    public function getResume(): ?string
+    {
+        return $this->resume;
+    }
+
+    public function setResume(string $resume): self
+    {
+        $this->resume = $resume;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostLike[]
+     */
+    public function getPostLikes(): Collection
+    {
+        return $this->postLikes;
+    }
+
+    public function addPostLike(PostLike $postLike): self
+    {
+        if (!$this->postLikes->contains($postLike)) {
+            $this->postLikes[] = $postLike;
+            $postLike->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostLike(PostLike $postLike): self
+    {
+        if ($this->postLikes->contains($postLike)) {
+            $this->postLikes->removeElement($postLike);
+            // set the owning side to null (unless already changed)
+            if ($postLike->getArticle() === $this) {
+                $postLike->setArticle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isLikedByUser(User $user): bool
+    {
+        foreach ($this->postLikes as $like) {
+            if($like->getUser() === $user) return true;
+        }
+
+        return false;
     }
 
 }

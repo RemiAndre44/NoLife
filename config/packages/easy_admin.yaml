@@ -30,6 +30,8 @@ easy_admin:
                 fields:
                     - id
                     - title
+                    - sub_title
+                    - resume
                     - content
                     - author
                     - category
@@ -41,6 +43,8 @@ easy_admin:
             form:
                 fields:
                     - title
+                    - sub_title
+                    - resume
                     - content
                     - author
                     - category
@@ -51,5 +55,7 @@ easy_admin:
             class: App\Entity\Comment
         Category:
             class: App\Entity\Category
+        PostLike:
+            class: App\Entity\PostLike
 
 

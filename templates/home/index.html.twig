@@ -3,11 +3,9 @@
 {% block main %}
    <div id="main">
 
-        {% include('/home/article.html.twig') %}
-        
-        {% include('/home/article.html.twig') %}
-        
-        {% include('/home/article.html.twig') %}
+        {% for article in articles %}
+            {% include('/home/article.html.twig') %}
+        {% endfor %}
 
         <ul class="actions pagination">
             <li><a href="" class="disabled button large previous">Previous Page</a></li>
