@@ -20,11 +20,11 @@
             </ul>
             <ul class="stats">
                 <li>
-                    <a href="" class="js-like">
+                    <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
                         {% if app.user and article.isLikedByUser(app.user) %}
-                            <i class="fas fa-thumbs-up"></i>
+                            <i class="fas fa-thumbs-up" style="color:blue"></i>
                         {% else %}
-                            <i class="far fa-thumbs-up"></i>
+                            <i class="far fa-thumbs-up" ></i>
                         {% endif %}
                         <span class="js-likes">
                             {{ article.postLikes | length }}

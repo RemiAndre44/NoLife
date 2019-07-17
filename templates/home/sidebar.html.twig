@@ -2,11 +2,7 @@
     {% block intro %}
         <section id="intro">
             <a href="#" class="logo">
-                {% if(app.user) %}
-                    <img src="images/upload/{{ app.user.image }}" alt="" />
-                {% else %}
-                    <img src="images/bojack.jpg" alt="" />
-                {% endif %}
+                <img src="images/bojack.jpg" alt="" />
             </a>
             <header>
                 <h2>"Du calme c'est un briquet !"</h2>
@@ -24,10 +20,8 @@
     </section>
     <section>
         <ul class="posts">
-            {% include('home/posts.html.twig') %}
-            {% include('home/posts.html.twig') %}
-            {% include('home/posts.html.twig') %}
-            {% include('home/posts.html.twig') %}
-            {% include('home/posts.html.twig') %}
+            {% for quote in quotes %}
+                {% include('home/posts.html.twig') %}
+            {% endfor %}
         </ul>
     </section>

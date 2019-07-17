@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\PostLike;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
+use App\Form\CommentFormType;
 use App\Repository\CategoryRepository;
+use App\Repository\QuoteRepository;
+use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -18,14 +22,16 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo)
+    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo)
     {
 
         $categories = $catRepo->selectCategories();
         $articles = $aRepo->selectArticles();
+        $quotes = $qRepo->findAll();
         return $this->render('home/index.html.twig', [
             'categories' => $categories,
-            'articles' => $articles
+            'articles' => $articles,
+            'quotes' => $quotes
         ]);
     }
 
@@ -33,36 +39,44 @@ class HomeController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/article/{id}", name="article")
      */
-    public function article(CategoryRepository $catRepo, ArticleRepository $aRepo, $id, Request $request)
+    public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, ObjectManager $manager)
     {
-
         $categories = $catRepo->selectCategories();
-
+        $comments = $comRepo->findAll();
         $article = $aRepo->selectArticleById($id);
+
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentFormType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setDate(new \DateTime());
+            $user = $this->getUser();
+            $comment->setUser($user);
+            $comment->setArticle($article);
+
+            $manager->persist($comment);
+
+            $manager->flush();
+
+            return $this->redirectToRoute('article');
+        }
+
 
         return $this->render('article.html.twig', [
             'article' => $article,
             'categories' => $categories,
-        ]);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/blog/article/{id}", name="blog_show")
-     */
-    public function show(ArticleRepository $repo, $id, Request $request, ObjectManager $manager){
-        //$repo = $this->getDoctrine()->getRepository(Article::class);
-        
-        $articles = $aRepo->findByArticleByCategory($id);
-        return $this->render('article.html.twig',[
-            'articles'=> $articles,
+            'comments' => $comments,
+            'commentForm' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/article/{id}/like", name="article_like")
      */
-    public function like(Article $article, ObjectManager $manager, PostLikeRepository $likeRepo): Response
+    public function like(Article $article, ObjectManager $manager, PostLikeRepository $likeRepo)
     {
         $user = $this->getUser();
 
@@ -79,7 +93,7 @@ class HomeController extends AbstractController
             return $this->json([
                 'code' => 200,
                 'message' => 'Like supprimé',
-                'likes' => $likeRepo->count(['article'])
+                'likes' => $likeRepo->count(['article' => $article])
              ], 200);
         }
 
@@ -89,13 +103,25 @@ class HomeController extends AbstractController
         $manager->persist($like);
         $manager->flush();
 
-
-
         return $this->json([
             'code' => 200,
             'message' => 'Like ajouté',
             'likes' => $likeRepo->count(['article' => $article])
          ], 200);
+    }
+
+    /**
+     * @Route("/category/{id}", name="category")
+     */
+    public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo, Request $request, ObjectManager $manager)
+    {
+        $categories = $catRepo->selectCategories();
+        $articles = $aRepo->findByArticleByCategory($id);
+
+        return $this->render('articleByCategory.html.twig', [
+            'articles' => $articles,
+            'categories' => $categories
+        ]);
     }
 
 }

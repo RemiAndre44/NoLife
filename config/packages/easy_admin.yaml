@@ -57,5 +57,7 @@ easy_admin:
             class: App\Entity\Category
         PostLike:
             class: App\Entity\PostLike
+        Quote:
+            class: App\Entity\Quote
 
 

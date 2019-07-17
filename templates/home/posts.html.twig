@@ -2,10 +2,11 @@
     <li>
         <article>
             <header>
-                <h3><a href="single.html">Lorem ipsum fermentum ut nisl vitae</a></h3>
-                <time class="published" datetime="2015-10-20">October 20, 2015</time>
+                <h3>"{{ quote.content }}"</h3>
+                <time class="published" >{{ quote.reference}}</time>
+                <time class="published" >Posté par {{ quote.user.surname}}</time>
             </header>
-            <a href="single.html" class="image"><img src="images/pic08.jpg" alt="" /></a>
+            <a class="image"><img src="images/upload/{{ quote.user.image }}" alt="" /></a>
         </article>
     </li>
 {% endblock %}
