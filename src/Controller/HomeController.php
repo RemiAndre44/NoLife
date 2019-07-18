@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Article;
+use App\Entity\Quote;
+use App\Entity\QuoteLike;
 use App\Entity\Comment;
 use App\Entity\PostLike;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
+use App\Repository\QuoteLikeRepository;
 use App\Form\CommentFormType;
 use App\Repository\CategoryRepository;
 use App\Repository\QuoteRepository;
@@ -74,6 +77,46 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/quote/{id}/like", name="quote_like")
+     */
+    public function quoteLike(Quote $quote, ObjectManager $manager, QuoteLikeRepository $qlRepo)
+    {
+
+        $user = $this->getUser();
+
+        if(!$user) return $this->json(['code' => 403, 'message' => 'Il faut être connecté'], 403);
+
+        if($quote->isLikedByUser($user)){
+            $like = $qlRepo->findOneBy([
+                'quote' => $quote,
+                'user' => $user
+            ]);
+
+            $manager->remove($like);
+            $manager->flush();
+            return $this->json([
+                'code' => 200,
+                'message' => 'Like supprimé',
+                'likes' => $qlRepo->count(['quote' => $quote])
+            ], 200);
+        }
+
+        $like = new QuoteLike();
+        $like->setQuote($quote)
+             ->setUser($user);
+        $manager->persist($like);
+        $manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Like ajouté',
+            'likes' => $qlRepo->count(['quote' => $quote])
+         ], 200);
+
+    }
+
+
+    /**
      * @Route("/article/{id}/like", name="article_like")
      */
     public function like(Article $article, ObjectManager $manager, PostLikeRepository $likeRepo)
@@ -121,6 +164,21 @@ class HomeController extends AbstractController
         return $this->render('articleByCategory.html.twig', [
             'articles' => $articles,
             'categories' => $categories
+        ]);
+    }
+
+    /**
+     * @Route("/quotes", name="quotes")
+     */
+    public function quotes(CategoryRepository $catRepo, QuoteRepository $qRepo)
+    {
+        $categories = $catRepo->selectCategories();
+        $quotes = $qRepo->findAll();
+
+
+        return $this->render('/quotes.html.twig',[
+            'categories' => $categories,
+            'quotes' => $quotes
         ]);
     }
 

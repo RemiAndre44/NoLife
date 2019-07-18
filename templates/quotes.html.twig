@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block bodyclass %}
+    <body class="single is-preload">
+{% endblock %}
+
+{% block main %}
+    {% for quote in quotes %}
+        <li>
+            <article>
+                <header>
+                    <h3>"{{ quote.content }}"</h3>
+                    <time class="published" >{{ quote.reference}}</time>
+                    <time class="published" >Posté par {{ quote.user.surname}}</time>
+                </header>
+            </article>
+        </li>
+    {% endfor %}
+{% endblock %}
+
+{% block about %}{% endblock %}

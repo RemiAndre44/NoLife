@@ -104,6 +104,11 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteLike", mappedBy="user")
+     */
+    private $quoteLikes;
+
 
     public function __construct()
     {
@@ -111,6 +116,7 @@ class User implements UserInterface
         $this->likes = new ArrayCollection();
         $this->quotes = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->quoteLikes = new ArrayCollection();
     }
 
 
@@ -365,6 +371,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($comment->getUser() === $this) {
                 $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuoteLike[]
+     */
+    public function getQuoteLikes(): Collection
+    {
+        return $this->quoteLikes;
+    }
+
+    public function addQuoteLike(QuoteLike $quoteLike): self
+    {
+        if (!$this->quoteLikes->contains($quoteLike)) {
+            $this->quoteLikes[] = $quoteLike;
+            $quoteLike->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuoteLike(QuoteLike $quoteLike): self
+    {
+        if ($this->quoteLikes->contains($quoteLike)) {
+            $this->quoteLikes->removeElement($quoteLike);
+            // set the owning side to null (unless already changed)
+            if ($quoteLike->getUser() === $this) {
+                $quoteLike->setUser(null);
             }
         }
 

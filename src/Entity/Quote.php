@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +32,16 @@ class Quote
      * @ORM\Column(type="string", length=255)
      */
     private $reference;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteLike", mappedBy="quote")
+     */
+    private $quoteLikes;
+
+    public function __construct()
+    {
+        $this->quoteLikes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,5 +82,45 @@ class Quote
         $this->reference = $reference;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|QuoteLike[]
+     */
+    public function getQuoteLikes(): Collection
+    {
+        return $this->quoteLikes;
+    }
+
+    public function addQuoteLike(QuoteLike $quoteLike): self
+    {
+        if (!$this->quoteLikes->contains($quoteLike)) {
+            $this->quoteLikes[] = $quoteLike;
+            $quoteLike->setQuote($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuoteLike(QuoteLike $quoteLike): self
+    {
+        if ($this->quoteLikes->contains($quoteLike)) {
+            $this->quoteLikes->removeElement($quoteLike);
+            // set the owning side to null (unless already changed)
+            if ($quoteLike->getQuote() === $this) {
+                $quoteLike->setQuote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isLikedByUser(User $user): bool
+    {
+        foreach ($this->quoteLikes as $like) {
+            if($like->getUser() === $user) return true;
+        }
+
+        return false;
     }
 }

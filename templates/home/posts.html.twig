@@ -5,6 +5,16 @@
                 <h3>"{{ quote.content }}"</h3>
                 <time class="published" >{{ quote.reference}}</time>
                 <time class="published" >Posté par {{ quote.user.surname}}</time>
+                <a href="{{ path('quote_like', {'id' : quote.id}) }}" class="js-like">
+                    {% if app.user and quote.isLikedByUser(app.user) %}
+                        <i class="fas fa-thumbs-up" style="color:blue"></i>
+                    {% else %}
+                        <i class="far fa-thumbs-up" ></i>
+                    {% endif %}
+                    <span class="js-likes">
+                        {{ quote.quoteLikes | length }}
+                    </span>
+                </a>
             </header>
             <a class="image"><img src="images/upload/{{ quote.user.image }}" alt="" /></a>
         </article>

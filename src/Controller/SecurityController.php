@@ -69,7 +69,9 @@ class SecurityController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function init(Request $request, ObjectManager $manager, UserRepository $uRepo, \Swift_Mailer $mailer){
+    public function init(Request $request, ObjectManager $manager, UserRepository $uRepo, CategoryRepository $catRepo, \Swift_Mailer $mailer){
+
+        $categories = $catRepo->selectCategories();
 
         if ($request->get("usernameChange")) {
             $email = $request->get("usernameChange");
@@ -85,26 +87,32 @@ class SecurityController extends AbstractController
                     }catch (\Exception $e){
                         $ERROR = "Echec lors de la mise à jour de l'utilisateur";
                         return $this->render('security/initPassword.html.twig', [
-                            'error' => $ERROR
+                            'error' => $ERROR,
+                            'categories' => $categories
                         ]);
                     }
                     return $this->render('security/initPassword.html.twig', [
-                        'success' => $success
+                        'success' => $success,
+                        'categories' => $categories
                     ]);
                 }else{
                     $ERROR = "Echec lors de l'envoie";
                     return $this->render('security/initPassword.html.twig', [
-                        'error' => $ERROR
+                        'error' => $ERROR,
+                        'categories' => $categories
                     ]);
                 }
             } else {
                 $ERROR = "Aucun utilisateur d'inscrit avec cette adresse mail";
                 return $this->render('security/initPassword.html.twig', [
-                    'error' => $ERROR
+                    'error' => $ERROR,
+                    'categories' => $categories
                 ]);
             }
         }
-        return $this->render('security/initPassword.html.twig');
+        return $this->render('security/initPassword.html.twig',[
+            'categories' => $categories
+        ]);
     }
 
     function generateToken($form)
