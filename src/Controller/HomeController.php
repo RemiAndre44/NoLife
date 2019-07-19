@@ -96,10 +96,28 @@ class HomeController extends AbstractController
         $categories = $catRepo->selectCategories();
         $articles = $aRepo->findByArticleByCategory($id);
 
-        return $this->render('articleByCategory.html.twig', [
+        return $this->render('articleBySearch.html.twig', [
             'articles' => $articles,
             'categories' => $categories
         ]);
+    }
+
+    /**
+     * @Route("/search", name="search")
+     * @return [type] [description]
+     */
+    public function search(ArticleRepository $aRepo, Request $request, CategoryRepository $catRepo)
+    {
+
+        $categories = $catRepo->selectCategories();
+
+        $articles = $aRepo->selectArticlesByField($request->get('query'));
+
+        return $this->render('articleBySearch.html.twig', [
+            'articles' => $articles,
+            'categories' => $categories
+        ]);
+
     }
 
     /**

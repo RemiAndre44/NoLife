@@ -32,7 +32,7 @@
                             <ul>
                                 <li class="search">
                                     <a class="fa-search" href="#search">Recherche</a>
-                                    <form id="search" method="get" action="#">
+                                    <form id="search" method="post" action="{{ path('search') }}">
                                         <input type="text" name="query" placeholder="Recherche" />
                                     </form>
                                 </li>

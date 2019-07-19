@@ -62,5 +62,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function selectArticlesByField($field){
+
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.content LIKE :val')
+            ->orWhere('a.title LIKE :val')
+            ->orWhere('a.sub_title LIKE :val')
+            ->setParameter('val', '%'.$field.'%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
 }

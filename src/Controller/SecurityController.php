@@ -43,7 +43,8 @@ class SecurityController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer){
+    public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer, CategoryRepository $catRepo){
+        $categories = $catRepo->selectCategories();
         $user = new User();
         $form=$this->createForm(RegisterFormType::class, $user);
         $form->handleRequest($request);
@@ -55,10 +56,22 @@ class SecurityController extends AbstractController
             $user->setImageFile($form['image']->getData());
             $manager->persist($user);
             $manager->flush();
+            return $this->render('security/login.html.twig',[
+                'form'=> $form->createView(),
+                'categories' => $categories
+            ]);
+        }elseif($form->isSubmitted() && !$form->isValid()){
+            $ERROR = "Les informations fournies sont erronés. L'inscription a échoué";
+            return $this->render('security/register.html.twig',[
+                'form'=> $form->createView(),
+                'categories' => $categories,
+                'error' => $ERROR
+            ]);
         }
 
         return $this->render('security/register.html.twig',[
             'form'=> $form->createView(),
+            'categories' => $categories,
         ]);
     }
 
