@@ -4,9 +4,6 @@ easy_admin:
         User:
             label: 'Utilisateur'
             list:
-                actions:
-                    - {name: 'delete', label: 'del' }
-                    - {name: 'edit' , lable: 'edite'}
                 title: 'Utilisateur'
                 fields:
                     - id

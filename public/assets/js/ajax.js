@@ -8,11 +8,11 @@ function onClickBtnLike(event){
     axios.get(url).then(function(response){
         const likes = response.data.likes;
         spanCount.textContent = likes;
-
-        if(icone.style.color == "blue"){
+console.log(icone.style.color);
+        if(icone.style.color == "rgb(66, 103, 178)"){
             icone.style.color = "";
         }else{
-            icone.style.color = "blue";
+            icone.style.color = "rgb(66, 103, 178)";
         }
     }).catch(function(error){
         if(error.response.status === 403){
@@ -27,3 +27,4 @@ function onClickBtnLike(event){
 document.querySelectorAll('a.js-like').forEach(function(link){
     link.addEventListener('click', onClickBtnLike);
 })
+

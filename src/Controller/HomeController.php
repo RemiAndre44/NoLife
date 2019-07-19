@@ -6,14 +6,18 @@ use App\Entity\Category;
 use App\Entity\Article;
 use App\Entity\Quote;
 use App\Entity\QuoteLike;
+use App\Entity\CommentLike;
 use App\Entity\Comment;
 use App\Entity\PostLike;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
+use App\Repository\CommentLikeRepository;
 use App\Form\CommentFormType;
+use App\Form\QuoteFormType;
 use App\Repository\CategoryRepository;
 use App\Repository\QuoteRepository;
 use App\Repository\CommentRepository;
@@ -25,11 +29,18 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo)
+    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo, PaginatorInterface $paginator, Request $request)
     {
 
         $categories = $catRepo->selectCategories();
-        $articles = $aRepo->selectArticles();
+        $articlesQuery = $aRepo->findArticlesQuery();
+
+        $articles = $paginator->paginate(
+            $articlesQuery, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            1 /*limit per page*/
+        );
+
         $quotes = $qRepo->findAll();
         return $this->render('home/index.html.twig', [
             'categories' => $categories,
@@ -45,7 +56,7 @@ class HomeController extends AbstractController
     public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, ObjectManager $manager)
     {
         $categories = $catRepo->selectCategories();
-        $comments = $comRepo->findAll();
+        $comments = $comRepo->findCommentsByArticle($id);
         $article = $aRepo->selectArticleById($id);
 
         $comment = new Comment();
@@ -76,82 +87,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/quote/{id}/like", name="quote_like")
-     */
-    public function quoteLike(Quote $quote, ObjectManager $manager, QuoteLikeRepository $qlRepo)
-    {
-
-        $user = $this->getUser();
-
-        if(!$user) return $this->json(['code' => 403, 'message' => 'Il faut être connecté'], 403);
-
-        if($quote->isLikedByUser($user)){
-            $like = $qlRepo->findOneBy([
-                'quote' => $quote,
-                'user' => $user
-            ]);
-
-            $manager->remove($like);
-            $manager->flush();
-            return $this->json([
-                'code' => 200,
-                'message' => 'Like supprimé',
-                'likes' => $qlRepo->count(['quote' => $quote])
-            ], 200);
-        }
-
-        $like = new QuoteLike();
-        $like->setQuote($quote)
-             ->setUser($user);
-        $manager->persist($like);
-        $manager->flush();
-
-        return $this->json([
-            'code' => 200,
-            'message' => 'Like ajouté',
-            'likes' => $qlRepo->count(['quote' => $quote])
-         ], 200);
-
-    }
-
-
-    /**
-     * @Route("/article/{id}/like", name="article_like")
-     */
-    public function like(Article $article, ObjectManager $manager, PostLikeRepository $likeRepo)
-    {
-        $user = $this->getUser();
-
-        if(!$user) return $this->json(['code' => 403, 'message' => 'Il faut être connecté'], 403);
-
-        if($article->isLikedByUser($user)){
-            $like = $likeRepo->findOneBy([
-                'article' => $article,
-                'user' => $user
-            ]);
-
-            $manager->remove($like);
-            $manager->flush();
-            return $this->json([
-                'code' => 200,
-                'message' => 'Like supprimé',
-                'likes' => $likeRepo->count(['article' => $article])
-             ], 200);
-        }
-
-        $like = new PostLike();
-        $like->setArticle($article)
-             ->setUser($user);
-        $manager->persist($like);
-        $manager->flush();
-
-        return $this->json([
-            'code' => 200,
-            'message' => 'Like ajouté',
-            'likes' => $likeRepo->count(['article' => $article])
-         ], 200);
-    }
 
     /**
      * @Route("/category/{id}", name="category")
@@ -168,17 +103,35 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/quotes", name="quotes")
      */
-    public function quotes(CategoryRepository $catRepo, QuoteRepository $qRepo)
+    public function quotes(CategoryRepository $catRepo, QuoteRepository $qRepo, Request $request, ObjectManager $manager)
     {
         $categories = $catRepo->selectCategories();
         $quotes = $qRepo->findAll();
 
+        $quote = new Quote();
+
+        $form = $this->createForm(QuoteFormType::class, $quote);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $quote->setUser($user);
+
+            $manager->persist($quote);
+
+            $manager->flush();
+
+            return $this->redirectToRoute('quotes');
+        }
 
         return $this->render('/quotes.html.twig',[
             'categories' => $categories,
-            'quotes' => $quotes
+            'quotes' => $quotes,
+            'quoteForm' => $form->createView()
         ]);
     }
 

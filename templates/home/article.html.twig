@@ -22,7 +22,7 @@
                 <li>
                     <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
                         {% if app.user and article.isLikedByUser(app.user) %}
-                            <i class="fas fa-thumbs-up" style="color:blue"></i>
+                            <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
                         {% else %}
                             <i class="far fa-thumbs-up" ></i>
                         {% endif %}
