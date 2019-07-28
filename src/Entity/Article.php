@@ -87,10 +87,16 @@ class Article
      */
     private $postLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Links", mappedBy="article")
+     */
+    private $links;
+
     public function __construct()
     {
         $this->list_comments = new ArrayCollection();
         $this->postLikes = new ArrayCollection();
+        $this->links = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -279,6 +285,42 @@ class Article
         }
 
         return false;
+    }
+
+    /**
+     * @return Collection|Links[]
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(Links $link): self
+    {
+        if (!$this->links->contains($link)) {
+            $this->links[] = $link;
+            $link->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLink(Links $link): self
+    {
+        if ($this->links->contains($link)) {
+            $this->links->removeElement($link);
+            // set the owning side to null (unless already changed)
+            if ($link->getArticle() === $this) {
+                $link->setArticle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->sub_title;
     }
 
 }

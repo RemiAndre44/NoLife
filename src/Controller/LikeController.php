@@ -77,10 +77,11 @@ class LikeController extends AbstractController
 
             $manager->remove($like);
             $manager->flush();
+
             return $this->json([
                 'code' => 200,
                 'message' => 'Like supprimé',
-                'likes' => $qlRepo->count(['quote' => $quote])
+                'likes' => $clRepo->count(['comment' => $comment])
             ], 200);
         }
 

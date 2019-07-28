@@ -56,5 +56,7 @@ easy_admin:
             class: App\Entity\PostLike
         Quote:
             class: App\Entity\Quote
+        Links:
+            class: App\Entity\Links
 
 

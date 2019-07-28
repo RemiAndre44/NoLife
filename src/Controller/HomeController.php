@@ -16,6 +16,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
+use App\Repository\LinksRepository;
 use App\Form\CommentFormType;
 use App\Form\QuoteFormType;
 use App\Repository\CategoryRepository;
@@ -38,7 +39,7 @@ class HomeController extends AbstractController
         $articles = $paginator->paginate(
             $articlesQuery, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            1 /*limit per page*/
+            3 /*limit per page*/
         );
 
         $quotes = $qRepo->findAll();
@@ -53,11 +54,12 @@ class HomeController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/article/{id}", name="article")
      */
-    public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, ObjectManager $manager)
+    public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, ObjectManager $manager, LinksRepository $lRepo)
     {
         $categories = $catRepo->selectCategories();
         $comments = $comRepo->findCommentsByArticle($id);
         $article = $aRepo->selectArticleById($id);
+        $links = $lRepo->findByArticle($id);
 
         $comment = new Comment();
 
@@ -75,7 +77,7 @@ class HomeController extends AbstractController
 
             $manager->flush();
 
-            return $this->redirectToRoute('article');
+            return $this->redirectToRoute('article',array('id' => $article->getId()));
         }
 
 
@@ -83,7 +85,8 @@ class HomeController extends AbstractController
             'article' => $article,
             'categories' => $categories,
             'comments' => $comments,
-            'commentForm' => $form->createView()
+            'commentForm' => $form->createView(),
+            'links' => $links
         ]);
     }
 
@@ -94,7 +97,7 @@ class HomeController extends AbstractController
     public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo, Request $request, ObjectManager $manager)
     {
         $categories = $catRepo->selectCategories();
-        $articles = $aRepo->findByArticleByCategory($id);
+        $articles = $aRepo->findArticleByCategory($id);
 
         return $this->render('articleBySearch.html.twig', [
             'articles' => $articles,

@@ -21,11 +21,15 @@
                             </div>
                         </header>
                         <span class="image featured"><img src="/images/upload/{{ article.image }}" alt="" /></span>
-                        <p>{{ article.content }}</p>
+                        
+                        <p>{{ article.resume }}</p>
                         <footer>
+                            <ul class="actions">
+                                <li><a href="{{path('article', {id: article.id})}}" class="button large">Lire l'article</a></li>
+                            </ul>
                             <ul class="stats">
-                                <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
-                                    <li>
+                                <li>
+                                    <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
                                         {% if app.user and article.isLikedByUser(app.user) %}
                                             <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
                                         {% else %}
@@ -34,15 +38,13 @@
                                         <span class="js-likes">
                                             {{ article.postLikes | length }}
                                         </span>
-                                    </li>
-                                </a>
-                                <a data-toggle="collapse" href="#comCollapse" role="button" aria-expanded="false" aria-controls="comCollapse">
-                                    <li class="icon solid fa-comment">
-                                        <span class="js-likes">
-                                            {{ article.listComments | length }}
-                                        </span>
-                                    </li>
-                                </a>
+                                    </a>
+                                </li>
+                                <li class="icon solid fa-comment">
+                                    <span class="js-likes">
+                                        {{ article.listComments | length }}
+                                    </span>
+                                </li>
                             </ul>
                         </footer>
                         <div class="row">
