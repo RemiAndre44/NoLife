@@ -16,6 +16,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
+use App\Repository\MovieRepository;
 use App\Repository\LinksRepository;
 use App\Form\CommentFormType;
 use App\Form\QuoteFormType;
@@ -30,11 +31,12 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo, PaginatorInterface $paginator, Request $request)
+    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo, PaginatorInterface $paginator, Request $request,MovieRepository $movieRepo)
     {
 
         $categories = $catRepo->selectCategories();
         $articlesQuery = $aRepo->findArticlesQuery();
+        $lastMovies = $movieRepo->findLastMovies();
 
         $articles = $paginator->paginate(
             $articlesQuery, /* query NOT result */
@@ -46,7 +48,8 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'categories' => $categories,
             'articles' => $articles,
-            'quotes' => $quotes
+            'quotes' => $quotes,
+            'lastMovies' => $lastMovies
         ]);
     }
 

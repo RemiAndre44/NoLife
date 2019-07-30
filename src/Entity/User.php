@@ -114,6 +114,11 @@ class User implements UserInterface
      */
     private $commentLikes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Star", mappedBy="user")
+     */
+    private $stars;
+
 
     public function __construct()
     {
@@ -123,6 +128,7 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->quoteLikes = new ArrayCollection();
         $this->commentLikes = new ArrayCollection();
+        $this->stars = new ArrayCollection();
     }
 
 
@@ -439,6 +445,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($commentLike->getUser() === $this) {
                 $commentLike->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Star[]
+     */
+    public function getStars(): Collection
+    {
+        return $this->stars;
+    }
+
+    public function addStar(Star $star): self
+    {
+        if (!$this->stars->contains($star)) {
+            $this->stars[] = $star;
+            $star->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStar(Star $star): self
+    {
+        if ($this->stars->contains($star)) {
+            $this->stars->removeElement($star);
+            // set the owning side to null (unless already changed)
+            if ($star->getUser() === $this) {
+                $star->setUser(null);
             }
         }
 

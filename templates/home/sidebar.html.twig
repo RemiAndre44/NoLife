@@ -10,12 +10,14 @@
             </header>
         </section>
     {% endblock %}
-    <!--<section>
+    <section>
         <div class="mini-posts">
-            {% include('home/mini_post.html.twig') %}
+            {% for movie in lastMovies %}
+                {% include('home/mini_post.html.twig') %}
+            {% endfor %}
             
         </div>
-    </section>-->
+    </section>
     <section>
         <ul class="posts">
             {% for quote in quotes %}

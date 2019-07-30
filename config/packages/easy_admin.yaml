@@ -20,6 +20,28 @@ easy_admin:
                     - password
                     - { property: 'imageFile', type: 'vich_file' }
             class: App\Entity\User
+        Movie:
+            label: 'Film'
+            list:
+                title: 'Film'
+                fields:
+                    - id
+                    - title
+                    - pitch
+                    - realisator
+                    - date
+                    - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
+            show:
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
+            form:
+                fields:
+                    - title
+                    - pitch
+                    - date
+                    - realisator
+                    - { property: 'imageFile', type: 'vich_file' }
+            class: App\Entity\Movie
         Article:
             label: 'Article'
             list:
@@ -58,5 +80,7 @@ easy_admin:
             class: App\Entity\Quote
         Links:
             class: App\Entity\Links
+        Stars:
+            class: App\Entity\Star
 
 

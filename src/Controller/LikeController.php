@@ -8,9 +8,11 @@ use App\Entity\Article;
 use App\Entity\Quote;
 use App\Entity\QuoteLike;
 use App\Entity\CommentLike;
+use App\Entity\Movie;
 use App\Entity\Comment;
 use App\Entity\PostLike;
 use App\Repository\ArticleRepository;
+use App\Repository\StarRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
@@ -135,5 +137,45 @@ class LikeController extends AbstractController
             'message' => 'Like ajouté',
             'likes' => $likeRepo->count(['article' => $article])
          ], 200);
+    }
+
+    /**
+     * @Route("/movie/{id}/stars/{rate}", name="movie_star")
+     */
+    public function movieStars(Movie $movie, ObjectManager $manager, StarRepository $starRepo, $rate)
+    {
+
+        $user = $this->getUser();
+
+        if(!$user) return $this->json(['code' => 403, 'message' => 'Il faut être connecté'], 403);
+
+        if($movie->hasAVoteFromUser($user)){
+            $star = $starRepo->findOneBy([
+                'movie' => $movie,
+                'user' => $user
+            ]);
+
+            $star->setRate($rate);
+            $manager->flush();
+
+            return $this->json([
+                'code' => 200,
+                'message' => 'Note modifiée',
+                'stars' => $rate], 200);
+
+        }
+
+        $star = new Star();
+        $star->setMovie($movie)
+             ->setUser($user)
+             ->setRate($rate);
+        $manager->persist($star);
+        $manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Vote ajouté',
+            'stars' => $rate], 200);
+
     }
 }

@@ -1,10 +1,33 @@
 {% block mini_post %}
     <article class="mini-post">
         <header>
-            <h3><a href="single.html">Vitae sed condimentum</a></h3>
-            <time class="published" datetime="2015-10-20">October 20, 2015</time>
-            <a href="#" class="author"><img src="images/avatar.jpg" alt="" /></a>
+            <h3><a href="single.html">{{movie.title}}</a></h3>
+            <time class="published">{{movie.date|date('Y M d')}}</time>
+            <div style="display:inline">
+                {% if app.user and movie.hasAVoteFromUser(app.user) %}
+                    {% for i in 1..movie.returnStar(app.user).rate %}
+                        <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}" >
+                            <i class="fas fa-star" id="star{{ i }}"></i>
+                        </a>
+                    {% endfor %}
+                    {% if(movie.returnStar(app.user).rate != 10) %}
+                        {% for f in (movie.returnStar(app.user).rate)+1..10 %}
+                            <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : f}) }}">
+                                <i class="far fa-star" id="star{{ f }}"></i>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                    
+                {% else %}
+                    {% for i in 1..10 %}
+                        <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}">
+                            <i class="far fa-star" id="star{{ i }}" onmouseover="changeClass('{{ i }}')" onmouseout="shootClass()"></i>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </header>
-        <a href="single.html" class="image"><img src="images/pic04.jpg" alt="" /></a>
+        <a href="single.html" class="image"><img src="images/upload/{{movie.image}}" alt="" /></a>
+
     </article>
 {% endblock %}
