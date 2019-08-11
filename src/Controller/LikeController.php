@@ -176,6 +176,5 @@ class LikeController extends AbstractController
             'code' => 200,
             'message' => 'Vote ajouté',
             'stars' => $rate], 200);
-
     }
 }

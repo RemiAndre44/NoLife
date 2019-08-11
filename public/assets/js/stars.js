@@ -22,18 +22,20 @@ function onClickBtnStar(event){
     event.preventDefault();
 
     const url = this.href;
-    const icone = this.querySelector('i');
-
+    
     axios.get(url).then(function(response){
         const stars = response.data.stars;
-        const reste = 10 - stars;
+        console.log(stars)
         for(i=1;i<=stars;i++){
-	        icone.style.color = "#adb5bd";
+            var selecteur = "i#star"+i;
+            $(selecteur)[0].classList.replace("far", "fas");
         }
         if(stars != 10){
-        	for(i=stars;i<= 10;i++){
-        		icone.style.color = "#ffffff";
-        	}
+            var loop = parseInt(stars) +1;
+        	for(i=loop;i<= 10;i++){
+        		var selecteur = "i#star"+i;
+                $(selecteur)[0].classList.replace("fas", "far");
+            }
         }
         
     }).catch(function(error){
@@ -47,5 +49,5 @@ function onClickBtnStar(event){
 
 
 document.querySelectorAll('a.js-star').forEach(function(link){
-    link.addEventListener('click', onClickBtnLike);
+    link.addEventListener('click', onClickBtnStar);
 })

@@ -16,6 +16,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
+use App\Repository\StarRepository;
 use App\Repository\MovieRepository;
 use App\Repository\LinksRepository;
 use App\Form\CommentFormType;
@@ -31,12 +32,13 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo, PaginatorInterface $paginator, Request $request,MovieRepository $movieRepo)
+    public function index(CategoryRepository $catRepo, ArticleRepository $aRepo, QuoteRepository $qRepo, PaginatorInterface $paginator, Request $request,MovieRepository $movieRepo, StarRepository $starRepo)
     {
 
         $categories = $catRepo->selectCategories();
         $articlesQuery = $aRepo->findArticlesQuery();
         $lastMovies = $movieRepo->findLastMovies();
+        $starsList = $starRepo->findAll();
 
         $articles = $paginator->paginate(
             $articlesQuery, /* query NOT result */
@@ -49,7 +51,8 @@ class HomeController extends AbstractController
             'categories' => $categories,
             'articles' => $articles,
             'quotes' => $quotes,
-            'lastMovies' => $lastMovies
+            'lastMovies' => $lastMovies,
+            'starList' => $starsList
         ]);
     }
 
@@ -97,10 +100,16 @@ class HomeController extends AbstractController
     /**
      * @Route("/category/{id}", name="category")
      */
-    public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo, Request $request, ObjectManager $manager)
+    public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo,PaginatorInterface $paginator, Request $request, ObjectManager $manager)
     {
         $categories = $catRepo->selectCategories();
-        $articles = $aRepo->findArticleByCategory($id);
+        $articleQuery = $aRepo->findArticleByCategoryQuery($id);
+
+        $articles = $paginator->paginate(
+            $articleQuery, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+        );
 
         return $this->render('articleBySearch.html.twig', [
             'articles' => $articles,
@@ -158,5 +167,27 @@ class HomeController extends AbstractController
             'quoteForm' => $form->createView()
         ]);
     }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/movies", name="movies")
+     */
+    public function movies(CategoryRepository $catRepo, MovieRepository $mRepo,PaginatorInterface $paginator, Request $request, ObjectManager $manager)
+    {
+        $categories = $catRepo->selectCategories();
+        $moviesQuery = $mRepo->findMoviesQuery();
+
+        $movies = $paginator->paginate(
+            $moviesQuery, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+        );
+
+        return $this->render('/movies.html.twig',[
+            'categories' => $categories,
+            'movies' => $movies,
+        ]);
+    }
+
 
 }

@@ -8,7 +8,6 @@ function onClickBtnLike(event){
     axios.get(url).then(function(response){
         const likes = response.data.likes;
         spanCount.textContent = likes;
-console.log(icone.style.color);
         if(icone.style.color == "rgb(66, 103, 178)"){
             icone.style.color = "";
         }else{

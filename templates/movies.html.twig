@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block bodyclass %}
+    <body class="single is-preload">
+{% endblock %}
+
+{% block main %}
+	{% for movie in movies %}
+		<article class="post">
+        <header>
+            <div class="title">
+                <h2><a >{{ movie.title }}</a></h2>
+            </div>
+            <div class="meta">
+                <time class="published">{{ movie.date|date("m/d/Y") }}</time>
+                <span class="name">{{ movie.realisator }}</span>
+            </div>
+        </header>
+        <a class="image featured"><img src="images/upload/{{ movie.image }}" alt="" /></a>
+        <p>{{ movie.pitch|raw }}</p>
+        <footer>
+ 			<div>Ta note :
+ 				<div style="display: block;"> 
+	                {% if app.user and movie.hasAVoteFromUser(app.user) %}
+	                    {% for i in 1..movie.returnStar(app.user).rate %}
+	                        <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}" >
+	                            <i class="fas fa-star" id="star{{ i }}"></i>
+	                        </a>
+	                    {% endfor %}
+	                    {% if(movie.returnStar(app.user).rate != 10) %}
+	                        {% for f in (movie.returnStar(app.user).rate)+1..10 %}
+	                            <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : f}) }}">
+	                                <i class="far fa-star" id="star{{ f }}"></i>
+	                            </a>
+	                        {% endfor %}
+	                    {% endif %}
+	                {% else %}
+	                    {% for i in 1..10 %}
+	                        <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}">
+	                            <i class="far fa-star" id="star{{ i }}" onmouseover="changeClass('{{ i }}')" onmouseout="shootClass()"></i>
+	                        </a>
+	                    {% endfor %}
+	                {% endif %}
+	            </div>
+                {% for movieList in movies %}
+                    {% set addition = 0 %}
+                    {% set looper = 0 %}
+                    {% if movieList.id == movie.id %}
+                        {% for star in movie.stars %}
+                            {%  set addition = addition + star.rate %}
+                            {% set looper = looper + 1 %}
+                        {% endfor %}
+                    {% endif %}
+                    {% set average = (addition / looper)|round %}
+                    <div>Note des utilisateurs :</div>
+                    <div>
+                        {% for i in 1..average %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% if average != 10 %}
+                            {% set start = average+1 %}
+                            {% for i in start..10 %}
+                                <i class="far fa-star"></i>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </footer>
+    </article>
+	{% endfor %}
+{% endblock %}
+
+{% block about %}{% endblock %}

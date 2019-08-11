@@ -2,8 +2,9 @@
     <article class="mini-post">
         <header>
             <h3><a href="single.html">{{movie.title}}</a></h3>
-            <time class="published">{{movie.date|date('Y M d')}}</time>
-            <div style="display:inline">
+            <time class="published">Sortie en salle : {{movie.date|date('Y M d')}}</time>
+            <div>Ta note :</div>
+            <div style="display:inline;">
                 {% if app.user and movie.hasAVoteFromUser(app.user) %}
                     {% for i in 1..movie.returnStar(app.user).rate %}
                         <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}" >
@@ -17,7 +18,6 @@
                             </a>
                         {% endfor %}
                     {% endif %}
-                    
                 {% else %}
                     {% for i in 1..10 %}
                         <a class="js-star" href="{{ path('movie_star', {'id' : movie.id, 'rate' : i}) }}">
@@ -25,6 +25,29 @@
                         </a>
                     {% endfor %}
                 {% endif %}
+                {% for movieList in lastMovies %}
+                    {% set addition = 0 %}
+                    {% set looper = 0 %}
+                    {% if movieList.id == movie.id %}
+                        {% for star in movie.stars %}
+                            {%  set addition = addition + star.rate %}
+                            {% set looper = looper + 1 %}
+                        {% endfor %}
+                    {% endif %}
+                    {% set average = (addition / looper)|round %}
+                    <div>Note des utilisateurs :</div>
+                    <div>
+                        {% for i in 1..average %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% if average != 10 %}
+                            {% set start = average+1 %}
+                            {% for i in start..10 %}
+                                <i class="far fa-star"></i>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
         </header>
         <a href="single.html" class="image"><img src="images/upload/{{movie.image}}" alt="" /></a>

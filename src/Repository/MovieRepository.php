@@ -32,6 +32,13 @@ class MovieRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findMoviesQuery()
+    {
+        return $this->createQueryBuilder('m')
+            ->getQuery();
+        ;
+    }
+
     /*
     public function findOneBySomeField($value): ?Movie
     {
