@@ -46,7 +46,7 @@ class HomeController extends AbstractController
             3 /*limit per page*/
         );
 
-        $quotes = $qRepo->findAll();
+        $quotes = $qRepo->findLastQuotes();
         return $this->render('home/index.html.twig', [
             'categories' => $categories,
             'articles' => $articles,
@@ -175,17 +175,19 @@ class HomeController extends AbstractController
     public function movies(CategoryRepository $catRepo, MovieRepository $mRepo,PaginatorInterface $paginator, Request $request, ObjectManager $manager)
     {
         $categories = $catRepo->selectCategories();
+        $moviesForStars = $mRepo->findAll();
         $moviesQuery = $mRepo->findMoviesQuery();
 
         $movies = $paginator->paginate(
             $moviesQuery, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
-            3 /*limit per page*/
+            6 /*limit per page*/
         );
 
         return $this->render('/movies.html.twig',[
             'categories' => $categories,
             'movies' => $movies,
+            'moviesForStars' => $moviesForStars,
         ]);
     }
 
