@@ -168,28 +168,4 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/movies", name="movies")
-     */
-    public function movies(CategoryRepository $catRepo, MovieRepository $mRepo,PaginatorInterface $paginator, Request $request, ObjectManager $manager)
-    {
-        $categories = $catRepo->selectCategories();
-        $moviesForStars = $mRepo->findAll();
-        $moviesQuery = $mRepo->findMoviesQuery();
-
-        $movies = $paginator->paginate(
-            $moviesQuery, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            6 /*limit per page*/
-        );
-
-        return $this->render('/movies.html.twig',[
-            'categories' => $categories,
-            'movies' => $movies,
-            'moviesForStars' => $moviesForStars,
-        ]);
-    }
-
-
 }

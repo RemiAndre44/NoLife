@@ -56,6 +56,7 @@ class SecurityController extends AbstractController
             $user->setImageFile($form['image']->getData());
             $manager->persist($user);
             $manager->flush();
+            $mail = $this->sendMail($user, $mailer, "newAccount");
             return $this->render('security/login.html.twig',[
                 'form'=> $form->createView(),
                 'categories' => $categories
@@ -165,28 +166,32 @@ class SecurityController extends AbstractController
 
         switch ($request) {
             case "changeMDP":
-                $adresse ="http://127.0.0.1:8000/change_password?token=".$user->getToken();
+                $adresse ="https://devandmore.yo.fr/change_password?token=".$user->getToken();
                 $token = $this->generateToken('form');
-                $body = "<h1>Vous venez de faire une demande de changement de mot de passe</h1>
-                         <p>Vous trouverez sur le lien ci-dessous une procédure pour le réinitialiser.</p>
-                         <p><a href='".$adresse."'>Cliquez ici</a> </p>
-                         <p>Le lien n'est accessible que pendant 15 minutes.</p>
-                         <p>Rémi</p>";
-                $subject = 'No Life Changement de Mot de passe';
-                $from = "remi.andre@oniris-nantes.fr";
+                $body = $this->renderView('mail/passwordReset.html.twig', [
+                    "adresse" => $adresse
+                ]);
+                $subject = 'Dev&More Changement de Mot de passe';
+                $to = $user->getEmail();
+                break;
+            case "newAccount" :
+                $body = $this->renderView('mail/newAccount.html.twig', [
+                    "name" => $user->getSurname(),
+                ]);
+                $subject = "";
                 $to = $user->getEmail();
                 break;
             default:
                 $body = "Mail par défault";
                  $subject = 'No Life Changement de Mot de passe';
-                $from = "remi.andre@oniris-nantes.fr";
+                $from = "admin@devandmore.yo.fr";
                 $to = $user->getEmail();
                 break;
         }
 
         $message = (new \Swift_Message('No Life'))
-            ->setFrom('remi.andre@oniris-nantes.fr')
-            ->setTo($user->getEmail())
+            ->setFrom('admin@devandmore.yo.fr')
+            ->setTo($to)
             ->setBody($body,'text/html');
 
         $result = $mailer->send($message);
@@ -244,5 +249,5 @@ class SecurityController extends AbstractController
             return $this->render('home/index.html.twig');
         }
     }
-    
+
 }

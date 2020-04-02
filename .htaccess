@@ -1,0 +1,14 @@
+RewriteEngine on
+RewriteBase /
+
+# Rewrite Regle 1: Rediriger toutes les requêtes pour les urls incluant le nom des répertoires et le nom des fichiers se trouvant dans public_html (www).
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /public/.*\ HTTP/
+RewriteRule ^blog/(.*)$ http://www.devandmore.yo.fr/$1 [R=301,L]
+
+# Rewrite Regle 2: Rediriger tous les www aux non-www et préserver le dossier et le chemin.
+RewriteCond %{HTTP_HOST} ^www.^devandmore\.yo.fr [NC]
+RewriteRule ^(.*)$ http://www.devandmore.yo.fr/$1 [R=301,L]
+
+# Rewrite Regle 3: Reecrire les urls qui ne sont pas des dossiers.
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ /public/$1 [L]

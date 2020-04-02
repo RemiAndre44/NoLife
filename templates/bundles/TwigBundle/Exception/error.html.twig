@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <title>{% block title %}Santi{% endblock %}</title>
+        <link rel="icon" type="favicon.png" href="../assets/favicon.png" />
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <link rel="stylesheet" href="../assets/css/main.css" />
+        {% endblock %}
+    </head>
+    <body>
+    <div id="main">
+        <article class="post">
+            <header>
+                <div class="title">
+                    <h1 style="text-align: center;">Erreur</h1>
+                    <h1 style="text-align: center;">Tu t'es perdu ?</h1>
+                </div>
+            </header>
+            <body>
+                <div class='col-12 errorBloc'>
+                    <div class='row justify-content-start'>
+                        <div class='col-12'>
+                            <img style="display: block;margin-left: auto;margin-right: auto;width: 50%;" src='https://66.media.tumblr.com/17dd0a14715c10768e4d1f1f7ce1173d/tumblr_pofjjqvmcX1y8zfw0o1_r2_500.gif'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions col-12" style="margin-top: 50px">
+                    <div class='row justify-content-center'>
+                        <a href="/" class="button large">Back Home</a>
+                    </div>
+                </div>
+            </body>
+        </article>

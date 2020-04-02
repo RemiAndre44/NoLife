@@ -51,6 +51,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function findArticlesQuery()
     {
         return $this->createQueryBuilder('a')
+            ->orderBy("a.date", 'DESC')
             ->getQuery();
         ;
     }
@@ -71,7 +72,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function selectArticles()
     {
         return $this->createQueryBuilder('a')
-        ->setMaxResults(30)
+            ->setMaxResults(30)
             ->getQuery()
             ->getResult()
         ;
