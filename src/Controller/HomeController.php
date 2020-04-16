@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Bds;
 use App\Entity\Article;
 use App\Entity\Quote;
 use App\Entity\QuoteLike;
@@ -17,6 +18,7 @@ use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
 use App\Repository\StarRepository;
+use App\Repository\BdsRepository;
 use App\Repository\MovieRepository;
 use App\Repository\LinksRepository;
 use App\Form\CommentFormType;
@@ -25,7 +27,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\QuoteRepository;
 use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class HomeController extends AbstractController
 {
@@ -60,7 +62,7 @@ class HomeController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/article/{id}", name="article")
      */
-    public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, ObjectManager $manager, LinksRepository $lRepo)
+    public function article(Article $article,CategoryRepository $catRepo, ArticleRepository $aRepo, CommentRepository $comRepo, $id, Request $request, EntityManagerInterface $manager, LinksRepository $lRepo)
     {
         $categories = $catRepo->selectCategories();
         $comments = $comRepo->findCommentsByArticle($id);
@@ -100,7 +102,7 @@ class HomeController extends AbstractController
     /**
      * @Route("/category/{id}", name="category")
      */
-    public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo,PaginatorInterface $paginator, Request $request, ObjectManager $manager)
+    public function category($id, CategoryRepository $catRepo, ArticleRepository $aRepo,PaginatorInterface $paginator, Request $request, EntityManagerInterface $manager)
     {
         $categories = $catRepo->selectCategories();
         $articleQuery = $aRepo->findArticleByCategoryQuery($id);
@@ -139,7 +141,7 @@ class HomeController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/quotes", name="quotes")
      */
-    public function quotes(CategoryRepository $catRepo, QuoteRepository $qRepo, Request $request, ObjectManager $manager)
+    public function quotes(CategoryRepository $catRepo, QuoteRepository $qRepo, Request $request, EntityManagerInterface $manager)
     {
         $categories = $catRepo->selectCategories();
         $quotes = $qRepo->findAll();
@@ -165,6 +167,52 @@ class HomeController extends AbstractController
             'categories' => $categories,
             'quotes' => $quotes,
             'quoteForm' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/movies", name="movies")
+     */
+    public function movies(CategoryRepository $catRepo, MovieRepository $mRepo, PaginatorInterface $paginator, Request $request, EntityManagerInterface $manager)
+    {
+        $categories = $catRepo->selectCategories();
+        $moviesForStars = $mRepo->findAll();
+        $moviesQuery = $mRepo->findMoviesQuery();
+
+        $movies = $paginator->paginate(
+            $moviesQuery,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('/movies.html.twig',[
+            'categories' => $categories,
+            'movies' => $movies,
+            'moviesForStars' => $moviesForStars
+        ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/bds", name="bds")
+     */
+    public function bds(CategoryRepository $catRepo, BdsRepository $bRepo, PaginatorInterface $paginator, Request $request, EntityManagerInterface $manager)
+    {
+        $categories = $catRepo->selectCategories();
+        $bdsForStars = $bRepo->findAll();
+        $bdsQuery = $bRepo->findbdsQuery();
+
+        $bds = $paginator->paginate(
+            $bdsQuery,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('/bds.html.twig',[
+            'categories' => $categories,
+            'bds' => $bds,
+            'bdsForStars' => $bdsForStars
         ]);
     }
 

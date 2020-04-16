@@ -5,72 +5,76 @@
 {% endblock %}
 
         {% block main %}
-            <div id="main">
+        <div class="row justify-content-lg-center">
+            <div class="col-12 col-lg-8 ">
+                    <div id="main">
 
-                <!-- Post -->
-                {% for article in articles %}
-                    <article class="post">
-                        <header>
-                            <div class="title">
-                                <h2><a href="#">{{ article.title }}</a></h2>
-                                <p>{{ article.subTitle }}</p>
-                            </div>
-                            <div class="meta">
-                                <time class="published" datetime="2015-11-01">{{ article.date|date("m/d/Y") }}</time>
-                                <a href="#" class="author"><span class="name">{{ article.author }}</span><img src="../images/upload/{{ article.author.image }}" alt="" /></a>
-                            </div>
-                        </header>
-                        <span class="image featured"><img src="/images/upload/{{ article.image }}" alt="" /></span>
-                        
-                        <p>{{ article.resume }}</p>
-                        <footer>
-                            <ul class="actions">
-                                <li><a href="{{path('article', {id: article.id})}}" class="button large">Lire l'article</a></li>
-                            </ul>
-                            <ul class="stats">
-                                <li>
-                                    <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
-                                        {% if app.user and article.isLikedByUser(app.user) %}
-                                            <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
-                                        {% else %}
-                                            <i class="far fa-thumbs-up" ></i>
-                                        {% endif %}
-                                        <span class="js-likes">
-                                            {{ article.postLikes | length }}
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="icon solid fa-comment">
-                                    <span class="js-likes">
-                                        {{ article.listComments | length }}
-                                    </span>
-                                </li>
-                            </ul>
-                        </footer>
-                        <div class="row">
-                            <div class="col">
-                                <div class="collapse multi-collapse" id="comCollapse">
-                                    <div class="card card-body">
-                                    {% if article.listComments is empty %}
-                                            <p style="text-align:center">Auncun Commentaire pour cet article. Soyez le premier !</p>
-                                    {% else %}
-                                        {% for comment in article.listComments %}
-                                            <article class="mini-post">
-                                                <header>
-                                                    <h3><a>{{ comment.content }}</a></h3>
-                                                    <time class="published" datetime="2015-10-20">{{ comment.user.surname }} le {{ comment.date | date('Y M D') }}</time>
-                                                    <a href="#" class="author"><img src="../images/upload/{{ comment.user.image }}" alt="" /></a>
-                                                </header>
-                                            </article>
-                                        {% endfor %}
-                                    {% endif %}
+                        <!-- Post -->
+                        {% for article in articles %}
+                            <article class="post">
+                                <header>
+                                    <div class="title">
+                                        <h2><a href="#">{{ article.title }}</a></h2>
+                                        <p>{{ article.subTitle }}</p>
+                                    </div>
+                                    <div class="meta">
+                                        <time class="published" datetime="2015-11-01">{{ article.date|date("m/d/Y") }}</time>
+                                        <a href="#" class="author"><span class="name">{{ article.author }}</span><img src="../images/upload/{{ article.author.image }}" alt="" /></a>
+                                    </div>
+                                </header>
+                                <span class="image featured"><img src="/images/upload/{{ article.image }}" alt="" /></span>
+                                
+                                <p>{{ article.resume }}</p>
+                                <footer>
+                                    <ul class="actions">
+                                        <li><a href="{{path('article', {id: article.id})}}" class="button large">Lire l'article</a></li>
+                                    </ul>
+                                    <ul class="stats">
+                                        <li>
+                                            <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
+                                                {% if app.user and article.isLikedByUser(app.user) %}
+                                                    <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
+                                                {% else %}
+                                                    <i class="far fa-thumbs-up" ></i>
+                                                {% endif %}
+                                                <span class="js-likes">
+                                                    {{ article.postLikes | length }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="icon solid fa-comment">
+                                            <span class="js-likes">
+                                                {{ article.listComments | length }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </footer>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="collapse multi-collapse" id="comCollapse">
+                                            <div class="card card-body">
+                                            {% if article.listComments is empty %}
+                                                    <p style="text-align:center">Auncun Commentaire pour cet article. Soyez le premier !</p>
+                                            {% else %}
+                                                {% for comment in article.listComments %}
+                                                    <article class="mini-post">
+                                                        <header>
+                                                            <h3><a>{{ comment.content }}</a></h3>
+                                                            <time class="published" datetime="2015-10-20">{{ comment.user.surname }} le {{ comment.date | date('Y M D') }}</time>
+                                                            <a href="#" class="author"><img src="../images/upload/{{ comment.user.image }}" alt="" /></a>
+                                                        </header>
+                                                    </article>
+                                                {% endfor %}
+                                            {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </article>
-                {% endfor %}
+                            </article>
+                        {% endfor %}
 
+                    </div>
+                </div>
             </div> 
         {% endblock %}
 

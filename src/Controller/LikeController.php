@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Article;
+use App\Entity\Bds;
 use App\Entity\Quote;
 use App\Entity\QuoteLike;
 use App\Entity\CommentLike;
@@ -12,20 +13,21 @@ use App\Entity\Movie;
 use App\Entity\Comment;
 use App\Entity\PostLike;
 use App\Repository\ArticleRepository;
+use App\Repository\BdsRepository;
 use App\Repository\StarRepository;
 use App\Repository\PostLikeRepository;
 use App\Repository\QuoteLikeRepository;
 use App\Repository\CommentLikeRepository;
 use App\Repository\QuoteRepository;
 use App\Repository\CommentRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LikeController extends AbstractController
 {
     /**
      * @Route("/quote/{id}/like", name="quote_like")
      */
-    public function quoteLike(Quote $quote, ObjectManager $manager, QuoteLikeRepository $qlRepo)
+    public function quoteLike(Quote $quote, EntityManagerInterface $manager, QuoteLikeRepository $qlRepo)
     {
 
         $user = $this->getUser();
@@ -64,7 +66,7 @@ class LikeController extends AbstractController
     /**
      * @Route("/comment/{id}/like", name="comment_like")
      */
-    public function commentLike(Comment $comment, ObjectManager $manager, CommentLikeRepository $clRepo)
+    public function commentLike(Comment $comment, EntityManagerInterface $manager, CommentLikeRepository $clRepo)
     {
 
         $user = $this->getUser();
@@ -105,7 +107,7 @@ class LikeController extends AbstractController
     /**
      * @Route("/article/{id}/like", name="article_like")
      */
-    public function like(Article $article, ObjectManager $manager, PostLikeRepository $likeRepo)
+    public function like(Article $article, EntityManagerInterface $manager, PostLikeRepository $likeRepo)
     {
         $user = $this->getUser();
 
@@ -142,7 +144,7 @@ class LikeController extends AbstractController
     /**
      * @Route("/movie/{id}/stars/{rate}", name="movie_star")
      */
-    public function movieStars(Movie $movie, ObjectManager $manager, StarRepository $starRepo, $rate)
+    public function movieStars(Movie $movie, EntityManagerInterface $manager, StarRepository $starRepo, $rate)
     {
 
         $user = $this->getUser();
@@ -167,6 +169,45 @@ class LikeController extends AbstractController
 
         $star = new Star();
         $star->setMovie($movie)
+             ->setUser($user)
+             ->setRate($rate);
+        $manager->persist($star);
+        $manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'Vote ajouté',
+            'stars' => $rate], 200);
+    }
+
+    /**
+     * @Route("/bds/{id}/stars/{rate}", name="bds_star")
+     */
+    public function bdsStars(Bds $bds, EntityManagerInterface $manager, StarRepository $starRepo, $rate)
+    {
+
+        $user = $this->getUser();
+
+        if(!$user) return $this->json(['code' => 403, 'message' => 'Il faut être connecté'], 403);
+
+        if($bds->hasAVoteFromUser($user)){
+            $star = $starRepo->findOneBy([
+                'bds' => $bds,
+                'user' => $user
+            ]);
+
+            $star->setRate($rate);
+            $manager->flush();
+
+            return $this->json([
+                'code' => 200,
+                'message' => 'Note modifiée',
+                'stars' => $rate], 200);
+
+        }
+
+        $star = new Star();
+        $star->setBds($bds)
              ->setUser($user)
              ->setRate($rate);
         $manager->persist($star);

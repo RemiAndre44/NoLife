@@ -31,6 +31,11 @@ class Star
      */
     private $movie;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Bds", inversedBy="stars")
+     */
+    private $bds;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +73,18 @@ class Star
     public function setMovie(?Movie $movie): self
     {
         $this->movie = $movie;
+
+        return $this;
+    }
+
+    public function getBds(): ?Bds
+    {
+        return $this->bds;
+    }
+
+    public function setBds(?Bds $bds): self
+    {
+        $this->bds = $bds;
 
         return $this;
     }

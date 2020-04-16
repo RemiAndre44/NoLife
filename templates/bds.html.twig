@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block bodyclass %}
+    <body class="single is-preload">
+{% endblock %}
+
+{% block main %}
+	<div class="row">
+	{% for bd in bds %}
+		<div class="col-12 col-sm-6">
+			<article class="post">
+		        <header>
+		            <div class="title">
+		                <h2><a >{{ bd.title }}</a></h2>
+		            </div>
+		            <div class="meta">
+		                <time class="published">{{ bd.date|date("m/d/Y") }}</time>
+		                <span class="name">{{ bd.author }}</span>
+		            </div>
+		        </header>
+		        <a class="image featured"><img src="images/upload/{{ bd.image }}" alt="" /></a>
+		        <p>{{ bd.pitch|raw }}</p>
+		        <footer>
+		 			<div>Ta note :
+		 				<div style="display: block;"> 
+			                {% if app.user and bd.hasAVoteFromUser(app.user) %}
+			                    {% for i in 1..bd.returnStar(app.user).rate %}
+			                        <a class="js-star" href="{{ path('bds_star', {'id' : bd.id, 'rate' : i}) }}" >
+			                            <i class="fas fa-star" id="star{{ i }}"></i>
+			                        </a>
+			                    {% endfor %}
+			                    {% if(bd.returnStar(app.user).rate != 10) %}
+			                        {% for f in (bd.returnStar(app.user).rate)+1..10 %}
+			                            <a class="js-star" href="{{ path('bds_star', {'id' : bd.id, 'rate' : f}) }}">
+			                                <i class="far fa-star" id="star{{ f }}"></i>
+			                            </a>
+			                        {% endfor %}
+			                    {% endif %}
+			                {% else %}
+			                    {% for i in 1..10 %}
+			                        <a class="js-star" href="{{ path('bds_star', {'id' : bd.id, 'rate' : i}) }}">
+			                            <i class="far fa-star" id="star{{ i }}" onmouseover="changeClass('{{ i }}')" onmouseout="shootClass()"></i>
+			                        </a>
+			                    {% endfor %}
+			                {% endif %}
+			            </div>
+		                {% for bdList in bdsForStars %}
+		                    {% set addition = 0 %}
+		                    {% set looper = 0 %}
+		                    {% if bdList.id == bd.id %}
+		                        {% for star in bd.stars %}
+		                            {%  set addition = addition + star.rate %}
+		                            {% set looper = looper + 1 %}
+		                        {% endfor %}
+		                        {% set average = (addition / looper)|round %}
+		                        <div>Note des utilisateurs :</div>
+		                        <div>
+		                            {% for i in 1..average %}
+		                                <i class="fas fa-star"></i>
+		                            {% endfor %}
+		                            {% if average != 10 %}
+		                                {% set start = average+1 %}
+		                                {% for i in start..10 %}
+		                                    <i class="far fa-star"></i>
+		                                {% endfor %}
+		                            {% endif %}
+		                        </div>
+		                    {% endif %}
+	                    
+	                {% endfor %}
+		            </div>
+		        </footer>
+	    	</article>
+	    </div>
+	{% endfor %}
+</div>
+<div class="row">
+	<div class="col-4"></div>
+	<div class="col-4">
+		<ul class="actions pagination">
+	        {{ knp_pagination_render(bds) }}
+	    </ul>
+	</div>
+</div>
+{% endblock %}
+
+{% block about %}{% endblock %}

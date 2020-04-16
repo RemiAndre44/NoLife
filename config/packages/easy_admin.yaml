@@ -70,6 +70,28 @@ easy_admin:
                     - date
                     - { property: 'imageFile', type: 'vich_file' }
             class: App\Entity\Article
+        Bds:
+            label: 'Bds'
+            list:
+                title: 'Bds'
+                fields:
+                    - id
+                    - title
+                    - pitch
+                    - author
+                    - date
+                    - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
+            show:
+                fields:
+                    - { property: 'image', type: 'image', base_path: '%app.path.upload%' }
+            form:
+                fields:
+                    - title
+                    - pitch
+                    - date
+                    - author
+                    - { property: 'imageFile', type: 'vich_file' }
+            class: App\Entity\Bds
         Comment:
             class: App\Entity\Comment
         Category:

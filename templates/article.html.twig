@@ -5,116 +5,120 @@
 {% endblock %}
 
         {% block main %}
-            <div id="main">
+        <div class="row justify-content-lg-center">
+            <div class="col-12 col-lg-8 ">
+                    <div id="main">
 
-                <!-- Post -->
-                <article class="post">
-                    <header>
-                        <div class="title">
-                            <h2><a href="#">{{ article.title }}</a></h2>
-                            <p>{{ article.subTitle }}</p>
-                        </div>
-                        <div class="meta">
-                            <time class="published" datetime="2015-11-01">{{ article.date|date("m/d/Y") }}</time>
-                            <a href="#" class="author"><span class="name">{{ article.author }}</span><img src="../images/upload/{{ article.author.image }}" alt="" /></a>
-                        </div>
-                    </header>
-                    <span class="image featured"><img src="/images/upload/{{ article.image }}" alt="" /></span>
-                    <p>{{ article.content|raw }}</p>
-                    {% for link in links %}
-                        <li style="list-style-type: none; ">
-                            <a href="{{ link.content }}" target="_blank">{{ link.content|raw }}</a>
-                        </li>
-                    {% endfor %} <hr>
-                    <footer>
-                        <ul class="stats">
-                            <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
-                                <li>
-                                    {% if app.user and article.isLikedByUser(app.user) %}
-                                        <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
-                                    {% else %}
-                                        <i class="far fa-thumbs-up" ></i>
-                                    {% endif %}
-                                    <span class="js-likes">
-                                        {{ article.postLikes | length }}
-                                    </span>
+                        <!-- Post -->
+                        <article class="post">
+                            <header>
+                                <div class="title">
+                                    <h2><a href="#">{{ article.title }}</a></h2>
+                                    <p>{{ article.subTitle }}</p>
+                                </div>
+                                <div class="meta">
+                                    <time class="published" datetime="2015-11-01">{{ article.date|date("m/d/Y") }}</time>
+                                    <a href="#" class="author"><span class="name">{{ article.author }}</span><img src="../images/upload/{{ article.author.image }}" alt="" /></a>
+                                </div>
+                            </header>
+                            <span class="image featured"><img src="/images/upload/{{ article.image }}" alt="" /></span>
+                            <p>{{ article.content|raw }}</p>
+                            {% for link in links %}
+                                <li style="list-style-type: none; ">
+                                    <a href="{{ link.content }}" target="_blank">{{ link.content|raw }}</a>
                                 </li>
-                            </a>
-                            <a data-toggle="collapse" href="#comCollapse" role="button" aria-expanded="false" aria-controls="comCollapse">
-                                <li class="icon solid fa-comment">
-                                    <span class="js-likes">
-                                        {{ article.listComments | length }}
-                                    </span>
-                                </li>
-                            </a>
-                        </ul>
-                    </footer>
-                    <div class="row">
-                        <div class="col">
-                            <div class="collapse multi-collapse" id="comCollapse">
-                                <div class="card card-body">
-                                {% if comments is empty %}
-                                        <p style="text-align:center">Auncun Commentaire pour cet article. Soyez le premier !</p>
-                                        {% if app.user %}
-                                            {{ form_start(commentForm) }}
+                            {% endfor %} <hr>
+                            <footer>
+                                <ul class="stats">
+                                    <a href="{{ path('article_like', {'id' : article.id}) }}" class="js-like">
+                                        <li>
+                                            {% if app.user and article.isLikedByUser(app.user) %}
+                                                <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
+                                            {% else %}
+                                                <i class="far fa-thumbs-up" ></i>
+                                            {% endif %}
+                                            <span class="js-likes">
+                                                {{ article.postLikes | length }}
+                                            </span>
+                                        </li>
+                                    </a>
+                                    <a data-toggle="collapse" href="#comCollapse" role="button" aria-expanded="false" aria-controls="comCollapse">
+                                        <li class="icon solid fa-comment">
+                                            <span class="js-likes">
+                                                {{ article.listComments | length }}
+                                            </span>
+                                        </li>
+                                    </a>
+                                </ul>
+                            </footer>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="collapse multi-collapse" id="comCollapse">
+                                        <div class="card card-body">
+                                        {% if comments is empty %}
+                                                <p style="text-align:center">Auncun Commentaire pour cet article. Soyez le premier !</p>
+                                                {% if app.user %}
+                                                    {{ form_start(commentForm) }}
 
-                                            {{ form_row(commentForm.content,{"attr":{"placeholder": "contenu" }}) }}
-                                            <div class="row">
-                                                <div class="col-12 col-sm-4"></div>
-                                                <div class="col-12 col-sm-4" style="margin-top:2rem">
-                                                    <button type="submit" style="width:100%">Poster</button>
-                                                </div>
-                                            </div>
-                                            {{ form_end(commentForm) }}
+                                                    {{ form_row(commentForm.content,{"attr":{"placeholder": "contenu" }}) }}
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-4"></div>
+                                                        <div class="col-12 col-sm-4" style="margin-top:2rem">
+                                                            <button type="submit" style="width:100%">Poster</button>
+                                                        </div>
+                                                    </div>
+                                                    {{ form_end(commentForm) }}
+                                                {% else %}
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-6 col-sm-4 col-md-2">
+                                                            <section>
+                                                                <ul class="actions stacked">
+                                                                    <li><a href="/login" class="button large fit">Login</a></li>
+                                                                </ul>
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                         {% else %}
-                                            <div class="row justify-content-center">
-                                                <div class="col-6 col-sm-4 col-md-2">
-                                                    <section>
-                                                        <ul class="actions stacked">
-                                                            <li><a href="/login" class="button large fit">Login</a></li>
-                                                        </ul>
-                                                    </section>
+                                            {% for comment in comments %}
+                                                <article class="mini-post">
+                                                    <header>
+                                                        <h3><a>{{ comment.content }}</a></h3>
+                                                        <time style="display:inline" class="published">{{ comment.user.surname }} le {{ comment.date | date('Y M D') }}</time>
+                                                        <a href="{{ path('comment_like', {'id' : comment.id}) }}" class="js-like" style="margin-left:2rem;font-size: 0.7em;">
+                                                            {% if app.user and comment.isLikedByUser(app.user) %}
+                                                                <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
+                                                            {% else %}
+                                                                <i class="far fa-thumbs-up" ></i>
+                                                            {% endif %}
+                                                            <span class="js-likes">
+                                                                {{ comment.commentLikes | length }}
+                                                            </span>
+                                                        </a>
+                                                        <a href="#" class="author"><img src="../images/upload/{{ comment.user.image }}" alt="" /></a>
+                                                    </header>
+                                                </article>
+                                            {% endfor %}
+                                                {{ form_start(commentForm) }}
+
+                                                {{ form_row(commentForm.content,{"attr":{"placeholder": "Contenu"}}) }}
+                                                <div class="row justify-content-center" style="margin-top:2rem">
+                                                    <div class="col-6 col-sm-4 col-md-2">
+                                                        <button type="submit">Poster</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+
+                                                {{ form_end(commentForm) }}
                                         {% endif %}
-                                {% else %}
-                                    {% for comment in comments %}
-                                        <article class="mini-post">
-                                            <header>
-                                                <h3><a>{{ comment.content }}</a></h3>
-                                                <time style="display:inline" class="published">{{ comment.user.surname }} le {{ comment.date | date('Y M D') }}</time>
-                                                <a href="{{ path('comment_like', {'id' : comment.id}) }}" class="js-like" style="margin-left:2rem;font-size: 0.7em;">
-                                                    {% if app.user and comment.isLikedByUser(app.user) %}
-                                                        <i class="fas fa-thumbs-up" style="color:#4267b2"></i>
-                                                    {% else %}
-                                                        <i class="far fa-thumbs-up" ></i>
-                                                    {% endif %}
-                                                    <span class="js-likes">
-                                                        {{ comment.commentLikes | length }}
-                                                    </span>
-                                                </a>
-                                                <a href="#" class="author"><img src="../images/upload/{{ comment.user.image }}" alt="" /></a>
-                                            </header>
-                                        </article>
-                                    {% endfor %}
-                                        {{ form_start(commentForm) }}
-
-                                        {{ form_row(commentForm.content,{"attr":{"placeholder": "Contenu"}}) }}
-                                        <div class="row justify-content-center" style="margin-top:2rem">
-                                            <div class="col-6 col-sm-4 col-md-2">
-                                                <button type="submit">Poster</button>
-                                            </div>
                                         </div>
-
-                                        {{ form_end(commentForm) }}
-                                {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </article>
+                        </article>
 
-            </div> 
+                    </div> 
+                </div>
+            </div>
         {% endblock %}
 
 {% block about %}{% endblock %}

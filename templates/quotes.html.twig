@@ -29,7 +29,8 @@
     {{ form_end(quoteForm) }}
 
     {% for quote in quotes %}
-        <li>
+    <ol>
+        <li style="list-style-type: none; ">
             <article style="margin:2rem">
                 <header>
                     <h3>"{{ quote.content }}"</h3>
@@ -48,6 +49,7 @@
                 </header>
             </article>
         </li>
+    </ol>
     {% endfor %}
 {% endblock %}
 
